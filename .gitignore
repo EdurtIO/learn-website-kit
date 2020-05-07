@@ -1,0 +1,18 @@
+# Logs
+logs
+*.log
+node_modules/
+jspm_packages/
+
+# Intellij Idea config file
+.idea
+*.ipr
+*.iws
+*.iml
+
+db.json
+.DS_Store
+package-lock.json
+public
+
+.deploy_git
