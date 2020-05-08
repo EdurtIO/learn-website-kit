@@ -117,15 +117,6 @@ plugins:
   google_site_verification:
   baidu_analytics:
 
-#miscellaneous:
-#  open_graph:
-#    fb_app_id:
-#    fb_admins:
-#    twitter_id:
-#    google_plus:
-#links:
-#  Hexo: http://hexo.io
-
 #deploy:
 #  type: git
 #  repository:

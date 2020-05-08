@@ -37,61 +37,84 @@
                     } else {
                         query.parent = {$exists: false};
                     }
-                    return categories.find(query).sort('name', 1).filter(function(cat) {
+                    return categories.find(query).sort('name', 1).filter(function (cat) {
                         return cat.length;
                     });
                 }
+
                 function hierarchicalList(tree, parent, classifiedArticles) {
-                  if(!tree.name) tree = {"name": "_root", "_id": "_root", "children": [], "articles": classifiedArticles['_root']};
-                  prepareQuery(categories, parent).forEach(function(cat, i) {
-                      var now_category = {
-                          "_id": cat._id, 
-                          "name": cat.name, 
-                          "children": [],
-                          "articles": classifiedArticles[cat._id]
-                      };
-                      if(is_post() && now_category.articles) {
-                          now_category.articles.forEach(function(post, i) {
-                              if(page._id == post._id) now_category["selected"] = true;
-                          });
-                      }
-                      var childTree = hierarchicalList(now_category, cat._id, classifiedArticles);
-                      if(childTree.selected) {tree["selected"] = true};
-                      tree.children.push(childTree);
-                  });
-                  return tree;
+                    if (!tree.name) tree = {
+                        "name": "_root",
+                        "_id": "_root",
+                        "children": [],
+                        "articles": classifiedArticles['_root']
+                    };
+                    prepareQuery(categories, parent).forEach(function (cat, i) {
+                        var now_category = {
+                            "_id": cat._id,
+                            "name": cat.name,
+                            "children": [],
+                            "articles": classifiedArticles[cat._id]
+                        };
+                        if (is_post() && now_category.articles) {
+                            now_category.articles.forEach(function (post, i) {
+                                if (page._id == post._id) now_category["selected"] = true;
+                            });
+                        }
+                        var childTree = hierarchicalList(now_category, cat._id, classifiedArticles);
+                        if (childTree.selected) {
+                            tree["selected"] = true
+                        }
+                        ;
+                        tree.children.push(childTree);
+                    });
+                    return tree;
                 }
+
                 var classifiedArticles = layArticles(posts);
                 var categoriesTree = hierarchicalList({}, null, classifiedArticles);
                 return categoriesTree;
             }
         %>
-        <% 
-            function visitTreePosts(branch, perExpand) {
-             %> <ul class="unstyled" id="tree" <% if(perExpand) { %>style="display: block;"<% } %>> <%
+        <%
+        function visitTreePosts(branch, perExpand) {
+        %>
+            <ul class="unstyled" id="tree" <% if(perExpand) { %>style="display: block;"
+                    <% } %>
+            >
+                <%
                 if(branch.children && branch.children.length) {
-                    branch.children.forEach(function(category){
-                    %>
+                branch.children.forEach(function(category){
+                %>
                     <li class="directory<%- category.selected ? ' open' : '' %>">
                         <a href="#" data-role="directory">
                             <i class="fa fa-folder<%- (perExpand || category.selected) ? '-open' : '' %>"></i>
-                            &nbsp;
                             <%- category.name %>
                         </a>
                         <% visitTreePosts(category, perExpand) %>
-                    </li> 
-                    <%  
-                    });
-                } 
-                if(branch.articles && branch.articles.length) {
-                    branch.articles.sort(function(post0, post1) {
-                        return new Date(post0.date) - new Date(post1.date)
-                    }).forEach(function(post){
-                        %> <li class="file<%- (is_post() && post._id == page._id) ? ' active' : '' %>"><a href="<%- post.path %>"><%- post.title %></a></li> <%
-                    });
+                    </li>
+                <%
+                });
                 }
-             %> </ul> <%
-            }
+                if(branch.articles && branch.articles.length) {
+                branch.articles.sort(function (post0, post1) {
+                    return new Date(post0.date) - new Date(post1.date)
+                }).forEach(function(post){
+                %>
+                    <li class="file<%- (is_post() && post._id == page._id) ? ' active' : '' %>">
+                        <a href="<%- post.path %>" class="tooltipped" target="_blank" data-toggle="tooltip"
+                           data-placement="top"
+                           title="<%- post.title %>">
+                            <%- truncate(post.title, {length: 12}) %>
+                        </a>
+                    </li>
+                <%
+                });
+                }
+                %>
+            </ul>
+        <%
+        }
         %>
         <%
             var categoriesTree = listCategories(site.categories, site.posts);
@@ -99,8 +122,8 @@
         %>
     </div>
     <script>
-        $(document).ready(function() {
-            var iconFolderOpenClass  = 'fa-folder-open';
+        $(document).ready(function () {
+            var iconFolderOpenClass = 'fa-folder-open';
             var iconFolderCloseClass = 'fa-folder';
             var iconAllExpandClass = 'fa-angle-double-down';
             var iconAllPackClass = 'fa-angle-double-up';

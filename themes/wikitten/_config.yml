@@ -83,6 +83,8 @@ plugins:
   baidu_analytics: # enter Baidu Analytics hash key
   busuanzi_count: true # options: true, false - to enable busuanzi site pv statistics
 
+jquery_ui: true
+
 # Miscellaneous
 miscellaneous:
   open_graph: # see http://ogp.me
@@ -91,4 +93,4 @@ miscellaneous:
     twitter_id:
     google_plus:
   links:
-
+    EdurtIO: https://www.edurt.io
